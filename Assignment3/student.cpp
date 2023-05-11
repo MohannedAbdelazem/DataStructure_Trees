@@ -8,11 +8,23 @@ class student{
     double gpa;
     string department;
     public:
+    student(){
+        id = 0;
+        name = "";
+        gpa = 0;
+        department = "";
+    }
     student(int id, string name, double gpa, string department){
         this->id = id;
         this->name = name;
         this->department = department;
         this->gpa = gpa;
+    }
+    void setStudent(student stud){
+        this->id = stud.getID();
+        this->name = stud.getName();
+        this->department = stud.getDepartment();
+        this->gpa = stud.getGPA();
     }
     int getID(){
         return id;
@@ -37,5 +49,11 @@ class student{
     }
     void setDepartment(string department){
         this->department = department;
+    }
+    void print(){
+        cout << "Student ID: " << this->id << endl;
+        cout << "Student Name: " << this->name << endl;
+        cout << "Student gpa: " << this->gpa << endl;
+        cout << "Student department: " << this->department << endl;
     }
 };
