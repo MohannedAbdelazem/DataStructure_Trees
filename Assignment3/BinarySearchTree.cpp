@@ -1,8 +1,8 @@
 #include <iostream>
 #include "./Student.cpp"
 using namespace std;
-class BST{
-    private:
+class BST{    
+    protected:
         struct Node{
             Node *left;
             Node *right;
@@ -13,7 +13,29 @@ class BST{
                 right = NULL;
             }
         };
+        virtual Node* insert(Node *node, Student stud){
+            if(node == NULL){
+                node = new Node();
+                node->student->setStudent(stud);
+            }
+            else if(stud.getID() <= node->student->getID()){
+                node->left = insert(node->left, stud);
+            }
+            else{
+                node->right = insert(node->right, stud);
+            }
+            return node;
+        }
+        void printInOrder(Node *node){
+            if(node == NULL)
+                return;
+            printInOrder(node->left);
+            node->student->print();
+            cout << '\n';
+            printInOrder(node->right);
+        }
         Node *root;
+    private:
         void removeNode(Node *&node, Student stud){
             if(node == NULL){
                 return;
@@ -70,41 +92,89 @@ class BST{
             }
             return result;
         }
-        Node* insert(Node *node, Student stud){
-            if(node == NULL){
-                node = new Node();
-                node->student->setStudent(stud);
-            }
-            else if(stud.getID() <= node->student->getID()){
-                node->left = insert(node->left, stud);
-            }
-            else{
-                node->right = insert(node->right, stud);
-            }
-            return node;
-        }
     public:
         BST() : root(NULL){}
-        void insert(Student stud){
+        virtual void insert(Student stud){
             root = insert(root, stud);
         }
-        void printInOrder(Node *node){
-            if(node == NULL)
-                return;
-            printInOrder(node->left);
-            node->student->print();
-            cout << '\n';
-            printInOrder(node->right);
-        }
-        void print(){
+        virtual void print(){
             printInOrder(root);
         }
-        void remove(Student stud){
+        virtual void remove(Student stud){
             removeNode(root, stud);
         }
         bool search(Student stud){
             bool result = search(root, stud);
             return result;
         }
+};
+class AVL : public BST{
+    private:
+        int calculateHeight(Node* node){
+            if(node == NULL){
+                return -1;
+            }
+            int leftHeight = calculateHeight(node->left);
+            int rightHeight = calculateHeight(node->right);
+            if(leftHeight > rightHeight){
+                return leftHeight + 1;
+            }else{
+                return rightHeight + 1;
+            }
+        }
+        int calculateBalance(Node* node){
+            if(node==NULL){
+                return -1;
+            }
+            return (calculateHeight(node->left) - calculateHeight(node->right));
+        }
+        Node* rightRotate(Node* node){
+            Node *otherNode = node->left;
+            Node *subTree = otherNode->right;
+            otherNode->right = node;
+            node->left = subTree;
+            return otherNode;
+        }
+        Node* leftRotate(Node *node) {
+            Node *otherNode = node->right;
+            Node *subTree = otherNode->left; 
+            otherNode->left = node;
+            node->right = subTree;
+            return otherNode;
+        }
+    protected:
+        virtual Node* insert(Node* node, Student stud) {
+            node = BST::insert(node, stud);
+            int balanceFactor = calculateBalance(node);
 
+            // Left Left Case
+            if (balanceFactor > 1 && stud.getID() < node->left->student->getID())
+                return rightRotate(node);
+
+            // Right Right Case
+            if (balanceFactor < -1 && stud.getID() > node->right->student->getID())
+                return leftRotate(node);
+
+            // Left Right Case
+            if (balanceFactor > 1 && stud.getID() > node->left->student->getID()) {
+                node->left = leftRotate(node->left);
+                return rightRotate(node);
+            }
+
+            // Right Left Case
+            if (balanceFactor < -1 && stud.getID() < node->right->student->getID()) {
+                node->right = rightRotate(node->right);
+                return leftRotate(node);
+            }
+
+            return node;
+        }
+
+    public:
+        virtual void insert(Student stud) {
+            root = insert(root, stud);
+        }
+        virtual void remove(Student stud){
+            
+        }
 };

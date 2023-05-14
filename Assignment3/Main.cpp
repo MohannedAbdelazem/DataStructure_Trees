@@ -4,7 +4,8 @@
 using namespace std;
 class Controller{
     private:
-        BST bst;
+        BST* bst = new BST();
+        AVL* avl = new AVL();
         Student generateTempStd(){
             int id;
             Student tmpStd;
@@ -13,9 +14,7 @@ class Controller{
             tmpStd.setID(id);
             return tmpStd;
         }
-    public:
-        void start(){
-            // Add students to the vector
+        void readFile(){
             string path = "./file.txt";
             string line;
             ifstream file(path);
@@ -53,41 +52,50 @@ class Controller{
                     }
                 }
                 Student st(id, name, gpa, department);
-                bst.insert(st);
-            }
-            //Controller App
-            a:cout << "Welcome to our DataStructure Application" << '\n';
-            cout << "Please choose one of the DataStructures: " << '\n';
-            cout << "1. BST" << '\n';
-            cout << "2. AVL" << '\n';
-            cout << "3. Min heap" << '\n';
-            cout << "4. Max heap" << '\n';
-            cout << "5. Exit program" << '\n';
-            int choice;
-            cin >> choice;
-            switch(choice){
-                case 1:
-                    BinarySearchTreeInterface();
-                    break;
-                case 2:
-                    // AVLInterface();
-                    break;
-                case 3:
-                    // MinHeapInterface();
-                    break;
-                case 4:
-                    // MaxHeapInterface();
-                    break;
-                case 5:
-                    exit(0);
-                    break;
-                default:
-                    cout << "Invalid entry.... please enter a valid entry" << '\n';
-                    goto a;
-                    break;
+                bst->insert(st);
+                avl->insert(st);
             }
         }
-        void BinarySearchTreeInterface(){
+    public:
+        void start(){
+            readFile();
+            while(true){
+                //Controller App
+                a:cout << "Welcome to our DataStructure Application" << '\n';
+                cout << "Please choose one of the DataStructures: " << '\n';
+                cout << "1. BST" << '\n';
+                cout << "2. AVL" << '\n';
+                cout << "3. Min heap" << '\n';
+                cout << "4. Max heap" << '\n';
+                cout << "5. Exit program" << '\n';
+                int choice;
+                cin >> choice;
+
+                switch(choice){
+                    case 1:
+                        BinaryInterface(bst);
+                        break;
+                    case 2:
+                        BinaryInterface(avl);
+                        break;
+                    case 3:
+                        // MinHeapInterface();
+                        break;
+                    case 4:
+                        // MaxHeapInterface();
+                        break;
+                    case 5:
+                        exit(0);
+                        break;
+                    default:
+                        cout << "Invalid entry.... please enter a valid entry" << '\n';
+                        goto a;
+                        break;
+                }
+            }
+        }
+        void BinaryInterface(BST* tree){
+            BST* bs = tree;
             while(true){
                 cout << "1. Add student" << '\n';
                 cout << "2. Remove student" << '\n';
@@ -110,39 +118,36 @@ class Controller{
                     cout << "Department: ";
                     cin >> department;
                     Student student(id, name, gpa, department);
-                    bst.insert(student);
+                    bs->insert(student);
                     cout << "The student is added." << '\n';
                 }else if(choice ==2){
                     Student std = generateTempStd();
-                    if(bst.search(std)){
-                        bst.remove(std);
+                    if(bs->search(std)){
+                        bs->remove(std);
                         cout << "Student is deleted. " << '\n';
                     }else{
                         cout << "Student is not found. " << '\n';
                     }
                 }else if(choice ==3){
                     Student std = generateTempStd();
-                    if(bst.search(std)){
+                    if(bs->search(std)){
                         cout << "Student is found. " << '\n';
                     }else{
                         cout << "Student is not found. " << '\n';
                     }
                 }else if(choice ==4){
-                    bst.print();
+                    bs->print();
                 }else if(choice ==5){
                     break;
                 }
             }
         }
-        // void AVLInterface();
         // void MaxHeapInterface();
         // void MinHeapInterface();
 };
 
 int main(){
     Controller app;
-    while(true){
-        app.start();
-    }
+    app.start();
     return 0;
 }
