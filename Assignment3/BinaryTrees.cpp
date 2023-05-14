@@ -34,9 +34,7 @@ class BST{
             cout << '\n';
             printInOrder(node->right);
         }
-        Node *root;
-    private:
-        void removeNode(Node *&node, Student stud){
+        virtual void removeNode(Node *&node, Student stud){
             if(node == NULL){
                 return;
             }
@@ -49,19 +47,16 @@ class BST{
             else{
                 //which means stud.getID() == node->st->getID()
                 if(node->left == NULL && node->right == NULL){
-                    // delete node;
                     node = NULL;
                 }
                 else if(node->left == NULL){
                     Node *tmp = node;
                     node = node->right;
                     tmp = NULL;
-                    // delete tmp;
                 }
                 else if(node->right == NULL){
                     Node *tmp = node;
                     node = node->left;
-                    // delete tmp;
                     tmp = NULL;
                 }
                 else{
@@ -69,11 +64,13 @@ class BST{
                     while(predecessor->right != NULL){
                         predecessor = predecessor->right;
                     }
-                    root->student->setStudent(*(predecessor->student));
+                    node->student->setStudent(*(predecessor->student));
                     removeNode(predecessor, *(predecessor->student));
                 }
             }
         }
+        Node *root;
+    private:    
         bool search(Node *node, Student stud){
             bool result;
             if(node == NULL){
@@ -169,12 +166,34 @@ class AVL : public BST{
 
             return node;
         }
-
+        virtual Node* removeNode(Node* node,Student stud){
+            BST::remove(stud);
+            if (root == NULL)
+		        return root;
+            int balanceFactor = calculateBalance(root);
+            // Left Left Case
+            if (balanceFactor > 1 && stud.getID() < node->left->student->getID())
+                return rightRotate(node);
+            // Right Right Case
+            if (balanceFactor < -1 && stud.getID() > node->right->student->getID())
+                return leftRotate(node);
+            // Left Right Case
+            if (balanceFactor > 1 && stud.getID() > node->left->student->getID()) {
+                node->left = leftRotate(node->left);
+                return rightRotate(node);
+            }
+            // Right Left Case
+            if (balanceFactor < -1 && stud.getID() < node->right->student->getID()) {
+                node->right = rightRotate(node->right);
+                return leftRotate(node);
+            }
+            return node;
+        }
     public:
         virtual void insert(Student stud) {
-            root = insert(root, stud);
+            root = AVL::insert(root, stud);
         }
         virtual void remove(Student stud){
-            
+            root = AVL::removeNode(root, stud);
         }
 };

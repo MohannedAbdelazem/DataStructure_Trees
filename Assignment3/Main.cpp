@@ -1,5 +1,5 @@
 #include <iostream>
-#include "./BinarySearchTree.cpp"
+#include "./BinaryTrees.cpp"
 #include <vector>
 using namespace std;
 class Controller{
@@ -70,7 +70,6 @@ class Controller{
                 cout << "5. Exit program" << '\n';
                 int choice;
                 cin >> choice;
-
                 switch(choice){
                     case 1:
                         BinaryInterface(bst);
