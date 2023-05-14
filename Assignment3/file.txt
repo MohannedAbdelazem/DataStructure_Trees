@@ -19,6 +19,10 @@ DS
 Omnia Osama
 3.6
 IS
+10
+Mohanad Bahaa
+2.9
+IT
 6
 Ahmed Omar
 3.9
@@ -35,7 +39,3 @@ CS
 Hany Mohsen
 1.8
 DS
-10
-Mohanad Bahaa
-2.9
-IT
