@@ -8,7 +8,7 @@ using namespace std;
 //     }
 //     return right;
 // }
-// why are you gay
+
 void heapify_min(int arr[], int n, int i){
     int smallest = i;
     int left = i*2+1;

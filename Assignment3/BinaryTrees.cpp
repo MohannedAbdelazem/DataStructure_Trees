@@ -47,17 +47,18 @@ class BST{
             else{
                 //which means stud.getID() == node->st->getID()
                 if(node->left == NULL && node->right == NULL){
+                    delete node;
                     node = NULL;
                 }
                 else if(node->left == NULL){
-                    Node *tmp = node;
+                    Node* tmp = node;
                     node = node->right;
-                    tmp = NULL;
+                    delete tmp;
                 }
                 else if(node->right == NULL){
-                    Node *tmp = node;
+                    Node* tmp = node;
                     node = node->left;
-                    tmp = NULL;
+                    delete tmp;
                 }
                 else{
                     Node *predecessor = node->left;
@@ -167,7 +168,7 @@ class AVL : public BST{
             return node;
         }
         virtual Node* removeNode(Node* node,Student stud){
-            BST::remove(stud);
+            BST::removeNode(node, stud);
             if (root == NULL)
 		        return root;
             int balanceFactor = calculateBalance(root);
