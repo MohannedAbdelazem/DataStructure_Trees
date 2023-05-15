@@ -1,13 +1,14 @@
-#include <iostream>
-#include "./BinaryTrees.cpp"
-using namespace std;
+#include "Student.h"
+#include "BST.cpp"
+#include "AVL.cpp"
+#include "HeapSort.cpp"
+#include <fstream>
 class Controller{
-
     private:
         BST* bst = new BST();
         AVL* avl = new AVL();
-        heapSort Minheap;
-        heapSort Maxheap;
+        HeapSort minHeap;
+        HeapSort maxHeap;
         Student generateTempStd(){
             int id;
             Student tmpStd;
@@ -56,8 +57,8 @@ class Controller{
                 Student st(id, name, gpa, department);
                 bst->insert(st);
                 avl->insert(st);
-                Minheap.insert(st);
-                Maxheap.insert(st);
+                minHeap.insert(st);
+                maxHeap.insert(st);
             }
         }
     public:
@@ -69,25 +70,27 @@ class Controller{
                 cout << "Please choose one of the DataStructures: " << '\n';
                 cout << "1. BST" << '\n';
                 cout << "2. AVL" << '\n';
-                cout << "3. Min heap" << '\n';
-                cout << "4. Max heap" << '\n';
+                cout << "3. Min Heap" << '\n';
+                cout << "4. Max Heap" << '\n';
                 cout << "5. Exit program" << '\n';
                 int choice;
                 cin >> choice;
                 switch(choice){
                     case 1:
-                        BinaryInterface(bst);
+                        binaryInterface(bst);
                         break;
                     case 2:
-                        BinaryInterface(avl);
+                        binaryInterface(avl);
                         break;
                     case 3:
-                        MinHeapInterface();
+                        heapInterface(true);
                         break;
                     case 4:
-                        MaxHeapInterface();
+                        heapInterface(false);
                         break;
                     case 5:
+                        delete bst;
+                        delete avl;
                         exit(0);
                         break;
                     default:
@@ -97,11 +100,11 @@ class Controller{
                 }
             }
         }
-        void MinHeapInterface(){
-            while(1){
-                cout << "1.Add student" << endl;
-                cout << "2.Print Students" << endl;
-                cout << "3.Main menu" << endl;
+        void heapInterface(bool isMin){
+            while(true){
+                cout << "1. Add student" << '\n';
+                cout << "2. Print Students" << '\n';
+                cout << "3. Main menu" << '\n';
                 int choice;
                 cin >> choice;
                 if(choice==1){
@@ -117,49 +120,18 @@ class Controller{
                     cout << "Department: ";
                     cin >> department;
                     Student student(id, name, gpa, department);
-                    Minheap.insert(student);
+                    isMin ? minHeap.insert(student) : maxHeap.insert(student);
                     cout << "The student is added." << '\n';
                 }
                 else if(choice == 2){
-                    Minheap.printMin();
+                    isMin ? minHeap.printMin() : maxHeap.printMax();
                 }
                 else{
                     break;
                 }
-
             }
         }
-        void MaxHeapInterface(){
-            a:cout << "1.Add student" << endl;
-            cout << "2.Print Students" << endl;
-            cout << "3.Main menu" << endl;
-            int choice;
-            cin >> choice;
-            if(choice==1){
-                    int id;
-                    string name, department;
-                    double gpa;
-                    cout << "ID: ";
-                    cin >> id;
-                    cout << "Name: ";
-                    cin >> name;
-                    cout << "GPA: ";
-                    cin >> gpa;
-                    cout << "Department: ";
-                    cin >> department;
-                    Student student(id, name, gpa, department);
-                    Maxheap.insert(student);
-                    cout << "The student is added." << '\n';
-            }
-            else if(choice == 2){
-                Maxheap.printMax();
-            }
-            else{
-                return;
-            }
-            goto a;
-        }
-        void BinaryInterface(BST* tree){
+        void binaryInterface(BST* tree){
             BST* bs = tree;
             while(true){
                 cout << "1. Add student" << '\n';
@@ -183,8 +155,12 @@ class Controller{
                     cout << "Department: ";
                     cin >> department;
                     Student student(id, name, gpa, department);
+                    int preSize = bs->getSize();
                     bs->insert(student);
-                    cout << "The student is added." << '\n';
+                    if(bs->getSize()==preSize)
+                        cout << "Student ID is already inserted" << '\n';
+                    else
+                        cout << "The student is added." << '\n';
                 }else if(choice ==2){
                     Student std = generateTempStd();
                     if(bs->search(std)){
@@ -207,8 +183,6 @@ class Controller{
                 }
             }
         }
-        // void MaxHeapInterface();
-        // void MinHeapInterface();
 };
 
 int main(){

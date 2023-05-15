@@ -1,5 +1,6 @@
+#ifndef STUDENT_H
+#define STUDENT_H
 #include <iostream>
-#include <fstream>
 using namespace std;
 class Student{
     private:
@@ -54,3 +55,4 @@ class Student{
             cout << '[' << id << ", " << name << ", " << gpa << ", " << department << ']';
         }
 };
+#endif
