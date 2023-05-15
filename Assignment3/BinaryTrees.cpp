@@ -1,5 +1,6 @@
 #include <iostream>
-#include "./Student.cpp"
+#include "./student.cpp"
+#include <vector>
 using namespace std;
 class BST{    
     protected:
@@ -167,24 +168,48 @@ class AVL : public BST{
 
             return node;
         }
-        virtual Node* removeNode(Node* node,Student stud){
-            BST::removeNode(node, stud);
-            if (root == NULL)
-		        return root;
-            int balanceFactor = calculateBalance(root);
-            // Left Left Case
-            if (balanceFactor > 1 && stud.getID() < node->left->student->getID())
+        virtual Node* removeNode(Node* node, Student stud) {
+            if (node == NULL) {
+                return node;
+            }
+            if (stud.getID() < node->student->getID()) {
+                node->left = removeNode(node->left, stud);
+            } else if (stud.getID() > node->student->getID()) {
+                node->right = removeNode(node->right, stud);
+            } else {
+                if (node->left == NULL || node->right == NULL) {
+                    Node* temp = node->left ? node->left : node->right;
+                    if (temp == NULL) {
+                        temp = node;
+                        node = NULL;
+                    } else {
+                        *node = *temp;
+                    }
+                    delete temp;
+                } else {
+                    Node* temp = node->left;
+                    while (temp->right != NULL) {
+                        temp = temp->right;
+                    }
+                    node->student->setStudent(*(temp->student));
+                    node->left = removeNode(node->left, *(temp->student));
+                }
+            }
+            if (node == NULL) {
+                return node;
+            }
+            int balanceFactor = calculateBalance(node);
+            if (balanceFactor > 1 && calculateBalance(node->left) >= 0) {
                 return rightRotate(node);
-            // Right Right Case
-            if (balanceFactor < -1 && stud.getID() > node->right->student->getID())
-                return leftRotate(node);
-            // Left Right Case
-            if (balanceFactor > 1 && stud.getID() > node->left->student->getID()) {
+            }   
+            if (balanceFactor > 1 && calculateBalance(node->left) < 0) {
                 node->left = leftRotate(node->left);
                 return rightRotate(node);
             }
-            // Right Left Case
-            if (balanceFactor < -1 && stud.getID() < node->right->student->getID()) {
+            if (balanceFactor < -1 && calculateBalance(node->right) <= 0) {
+                return leftRotate(node);
+            }
+            if (balanceFactor < -1 && calculateBalance(node->right) > 0) {
                 node->right = rightRotate(node->right);
                 return leftRotate(node);
             }
@@ -197,4 +222,83 @@ class AVL : public BST{
         virtual void remove(Student stud){
             root = AVL::removeNode(root, stud);
         }
+};
+
+class heapSort{
+    private:
+    vector<Student> st;
+    void swap(Student &gpa1, Student &gpa2){
+        Student gpa1tmp(gpa1);
+        gpa1.setStudent(gpa2);
+        gpa2.setStudent(gpa1tmp);
+    }
+    void heapifyMin(int n, int i){
+        int largest = i;
+        int left = i*2+1;
+        int right = i*2+2;
+        if(left < n && st[left].getGPA() > st[largest].getGPA()){
+            largest = left;
+        }
+        if(right < n && st[right].getGPA() > st[largest].getGPA()){
+            largest = right;
+        }
+        if(largest != i){
+            swap(st[i], st[largest]);
+            heapifyMin(n, largest);
+        }
+    }
+    void heapsortMin(){
+        for(int i = st.size()/2-1;i>=0;i--){
+            heapifyMin(st.size(), i);
+        }
+        for(int i = st.size()-1;i>=0;i--){
+            swap(st[i], st[0]);
+            heapifyMin(i, 0);
+        }
+    }
+
+
+    void heapifyMax(int n, int i){
+        int smallest = i;
+        int left = i*2+1;
+        int right = i*2+2;
+        if(left < n && st[left].getGPA() < st[smallest].getGPA()){
+            smallest = left;
+        }
+        if(right < n && st[right].getGPA() < st[smallest].getGPA()){
+            smallest = right;
+        }
+        if(smallest != i){
+            swap(st[i], st[smallest]);
+            heapifyMax(n, smallest);
+        }
+    }
+    void heapsortMax(){
+        for(int i = st.size()/2-1;i>=0;i--){
+            heapifyMax(st.size(), i);
+        }
+        for(int i = st.size()-1;i>=0;i--){
+            swap(st[i], st[0]);
+            heapifyMax(i, 0);
+        }
+    }
+    public:
+    void insert(Student s){
+        st.push_back(s);
+    }
+
+    void printMin(){
+        heapsortMin();
+        for(int i = 0;i<st.size();i++){
+            st[i].print();
+            cout << endl;
+        }
+    }
+    void printMax(){
+        heapsortMax();
+        for(int i = 0;i<st.size();i++){
+            st[i].print();
+            cout << endl;
+        }
+    }
 };

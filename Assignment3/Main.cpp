@@ -1,11 +1,13 @@
 #include <iostream>
 #include "./BinaryTrees.cpp"
-#include <vector>
 using namespace std;
 class Controller{
+
     private:
         BST* bst = new BST();
         AVL* avl = new AVL();
+        heapSort Minheap;
+        heapSort Maxheap;
         Student generateTempStd(){
             int id;
             Student tmpStd;
@@ -54,6 +56,8 @@ class Controller{
                 Student st(id, name, gpa, department);
                 bst->insert(st);
                 avl->insert(st);
+                Minheap.insert(st);
+                Maxheap.insert(st);
             }
         }
     public:
@@ -78,10 +82,10 @@ class Controller{
                         BinaryInterface(avl);
                         break;
                     case 3:
-                        // MinHeapInterface();
+                        MinHeapInterface();
                         break;
                     case 4:
-                        // MaxHeapInterface();
+                        MaxHeapInterface();
                         break;
                     case 5:
                         exit(0);
@@ -92,6 +96,68 @@ class Controller{
                         break;
                 }
             }
+        }
+        void MinHeapInterface(){
+            while(1){
+                cout << "1.Add student" << endl;
+                cout << "2.Print Students" << endl;
+                cout << "3.Main menu" << endl;
+                int choice;
+                cin >> choice;
+                if(choice==1){
+                    int id;
+                    string name, department;
+                    double gpa;
+                    cout << "ID: ";
+                    cin >> id;
+                    cout << "Name: ";
+                    cin >> name;
+                    cout << "GPA: ";
+                    cin >> gpa;
+                    cout << "Department: ";
+                    cin >> department;
+                    Student student(id, name, gpa, department);
+                    Minheap.insert(student);
+                    cout << "The student is added." << '\n';
+                }
+                else if(choice == 2){
+                    Minheap.printMin();
+                }
+                else{
+                    break;
+                }
+
+            }
+        }
+        void MaxHeapInterface(){
+            a:cout << "1.Add student" << endl;
+            cout << "2.Print Students" << endl;
+            cout << "3.Main menu" << endl;
+            int choice;
+            cin >> choice;
+            if(choice==1){
+                    int id;
+                    string name, department;
+                    double gpa;
+                    cout << "ID: ";
+                    cin >> id;
+                    cout << "Name: ";
+                    cin >> name;
+                    cout << "GPA: ";
+                    cin >> gpa;
+                    cout << "Department: ";
+                    cin >> department;
+                    Student student(id, name, gpa, department);
+                    Maxheap.insert(student);
+                    cout << "The student is added." << '\n';
+            }
+            else if(choice == 2){
+                Maxheap.printMax();
+            }
+            else{
+                return;
+            }
+            goto a;
         }
         void BinaryInterface(BST* tree){
             BST* bs = tree;
