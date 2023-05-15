@@ -1,6 +1,6 @@
-# Data Structures Course Project
+# Data Structures Assignment
 
-This project was developed as part of a university course on data structures. It was implemented collaboratively with my teammate Mohanned Abdelazem and Abdelrahman Ashraf. The project focuses on implementing AVL trees, Binary Search Trees (BST), and heaps. Additionally, it includes an application that allows users to interact with these data structures.
+This assignment was developed as part of a university course on data structures. It was implemented collaboratively with my teammate Mohanned Abdelazem and Abdelrahman Ashraf. The assignment focuses on implementing AVL trees, Binary Search Trees (BST), and heaps. Additionally, it includes an application that allows users to interact with these data structures.
 
 ## Project Structure
 
